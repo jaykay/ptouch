@@ -74,7 +74,7 @@ func TestDialAndHealthCheck(t *testing.T) {
 			return
 		}
 		// Respond with status packet.
-		conn.Write(pkt[:])
+		_, _ = conn.Write(pkt[:])
 	})
 	defer ln.Close()
 
@@ -194,7 +194,7 @@ func TestConnectionReadWriteRoundTrip(t *testing.T) {
 		if _, err := io.ReadFull(conn, buf); err != nil {
 			return
 		}
-		conn.Write(buf)
+		_, _ = conn.Write(buf)
 	})
 	defer ln.Close()
 

@@ -112,7 +112,7 @@ func fetchWebStatus(host string) (*webStatus, error) {
 
 	// Parse tape width from media type like "24mm(0.94\")"
 	if m := regexp.MustCompile(`(\d+)mm`).FindStringSubmatch(ws.MediaType); m != nil {
-		fmt.Sscanf(m[1], "%d", &ws.TapeWidthMM)
+		_, _ = fmt.Sscanf(m[1], "%d", &ws.TapeWidthMM)
 	}
 
 	// Parse info page.
