@@ -1,0 +1,23 @@
+# Binary
+/ptouch
+dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test artifacts
+*.test
+cover.out
+cover.html
+
+# Local config
+.env
+CLAUDE.md
+.claude/
