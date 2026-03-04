@@ -239,3 +239,7 @@ These apply to all commands:
 | `--preview` | Save preview PNG instead of printing | — |
 
 Note: `--text` and `--image` are mutually exclusive.
+
+---
+
+*Brother and P-Touch are trademarks of Brother Industries, Ltd. This project is not affiliated with, endorsed by, or sponsored by Brother Industries.*

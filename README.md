@@ -50,6 +50,10 @@ go test ./...    # 106 tests
 
 The protocol implementation is based on [ptouch-print](https://git.familie-radermacher.ch/linux/ptouch-print.git) by Dominic Radermacher — a C reference implementation that was invaluable for understanding the Brother ESC/P raster protocol.
 
+## Disclaimer
+
+Brother and P-Touch are trademarks of Brother Industries, Ltd. This project is not affiliated with, endorsed by, or sponsored by Brother Industries. All trademarks belong to their respective owners.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

@@ -167,3 +167,7 @@ The model database (`internal/device/models.go`) contains 27 printers from the C
 | 18mm  | 120 | 3.0mm |
 | 24mm  | 128 | 3.0mm |
 | 36mm  | 192 | 4.5mm |
+
+---
+
+*Brother and P-Touch are trademarks of Brother Industries, Ltd. This project is not affiliated with, endorsed by, or sponsored by Brother Industries.*

@@ -188,3 +188,7 @@ Tape width is parsed from the media type string (e.g., "12mm(0.47\")").
 
 - [ptouch-print C reference](https://git.familie-radermacher.ch/linux/ptouch-print.git) — original C implementation
 - Brother PT-P750W technical reference (from reverse engineering)
+
+---
+
+*Brother and P-Touch are trademarks of Brother Industries, Ltd. This project is not affiliated with, endorsed by, or sponsored by Brother Industries.*

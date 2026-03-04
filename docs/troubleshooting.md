@@ -152,3 +152,7 @@ This shows:
 | `printer not ready: no tape loaded` | No tape cassette | Insert a tape cassette |
 | `printer not ready: cutter jam` | Cutter stuck | Open cover, remove jammed tape |
 | `printer not ready: printer is overheated` | Thermal protection | Wait a few minutes |
+
+---
+
+*Brother and P-Touch are trademarks of Brother Industries, Ltd. This project is not affiliated with, endorsed by, or sponsored by Brother Industries.*
