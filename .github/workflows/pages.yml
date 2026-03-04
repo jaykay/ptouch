@@ -6,6 +6,7 @@ on:
     paths:
       - "docs/**"
       - "README.md"
+      - ".github/workflows/pages.yml"
 
 permissions:
   contents: read
@@ -22,18 +23,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build docs site
+      - name: Prepare docs source
         run: |
-          mkdir -p _site
-          cp README.md _site/index.md
-          cp -r docs/* _site/
-          # Add minimal Jekyll config for GitHub Pages
-          cat > _site/_config.yml << 'EOF'
+          mkdir -p _site_src
+          cp README.md _site_src/index.md
+          cp -r docs/* _site_src/
+          cat > _site_src/_config.yml << 'EOF'
           title: ptouch
           description: Brother P-Touch network label printer CLI
           theme: jekyll-theme-minimal
           markdown: GFM
           EOF
+
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: _site_src
+          destination: _site
 
       - uses: actions/upload-pages-artifact@v3
         with:
