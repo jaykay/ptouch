@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/jaykay/ptouch/compare/v1.2.0...v1.2.1) (2026-03-05)
+
+
+### Bug Fixes
+
+* **cli:** populate version from Go build info for go install ([a2355cb](https://github.com/jaykay/ptouch/commit/a2355cb77464bb61d44ae47827b20f719d654760))
+
 ## [1.2.0](https://github.com/jaykay/ptouch/compare/v1.1.0...v1.2.0) (2026-03-05)
 
 
