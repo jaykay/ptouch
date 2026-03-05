@@ -30,10 +30,7 @@ jobs:
 
           # README as index — rewrite .md links to .html for Pages
           printf -- '---\ntitle: Home\nnav_order: 1\n---\n' > _site_src/index.md
-          sed 's/\(docs\/[a-z]*\)\.md/\1.html/g; s/](LICENSE)/](LICENSE.html)/' README.md >> _site_src/index.md
-
-          # LICENSE with front matter
-          printf -- '---\ntitle: License\nnav_order: 6\n---\n' | cat - LICENSE > _site_src/LICENSE.md
+          sed 's/\(docs\/[a-z]*\)\.md/\1.html/g' README.md >> _site_src/index.md
 
           # Docs already have front matter
           cp -r docs/* _site_src/docs/
@@ -46,6 +43,7 @@ jobs:
           markdown: GFM
           color_scheme: light
           aux_links:
+            License: https://github.com/jaykay/ptouch/blob/main/LICENSE
             GitHub: https://github.com/jaykay/ptouch
             Releases: https://github.com/jaykay/ptouch/releases
           YAML
