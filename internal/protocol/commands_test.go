@@ -105,6 +105,23 @@ func TestCompression(t *testing.T) {
 	}
 }
 
+func TestMargin(t *testing.T) {
+	tests := []struct {
+		dots int
+		want []byte
+	}{
+		{0, []byte{0x1B, 0x69, 0x64, 0x00, 0x00}},
+		{14, []byte{0x1B, 0x69, 0x64, 0x0E, 0x00}},
+		{256, []byte{0x1B, 0x69, 0x64, 0x00, 0x01}},
+	}
+	for _, tt := range tests {
+		got := Margin(tt.dots)
+		if !bytes.Equal(got, tt.want) {
+			t.Fatalf("Margin(%d) = %X, want %X", tt.dots, got, tt.want)
+		}
+	}
+}
+
 func TestPrecut(t *testing.T) {
 	tests := []struct {
 		enable bool

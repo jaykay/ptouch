@@ -287,14 +287,21 @@ func renderText(tapePixels, maxPixels, dpi int) (*raster.RenderResult, error) {
 		return nil, fmt.Errorf("invalid alignment %q (use left, center, or right)", flagAlign)
 	}
 
-	// Convert --width mm to pixels.
+	// Convert --width mm to pixels, subtracting feed margins.
+	// The printer feeds blank tape on each side of the content for the cutter,
+	// so the content must be shorter to achieve the requested total label width.
 	var maxWidthPx int
 	if flagWidth > 0 {
 		if dpi == 0 {
 			dpi = 180
 		}
-		maxWidthPx = int(math.Round(flagWidth * float64(dpi) / 25.4))
-		debugf("label width: %.1fmm = %dpx at %d DPI", flagWidth, maxWidthPx, dpi)
+		totalPx := int(math.Round(flagWidth * float64(dpi) / 25.4))
+		maxWidthPx = totalPx - 2*protocol.DefaultFeedMargin
+		if maxWidthPx < 1 {
+			maxWidthPx = 1
+		}
+		debugf("label width: %.1fmm = %dpx total, %dpx content (2×%d feed margin)",
+			flagWidth, totalPx, maxWidthPx, protocol.DefaultFeedMargin)
 	}
 
 	cfg := raster.TextConfig{
@@ -330,6 +337,10 @@ func printLabel(sess *protocol.Session, model *device.Model, tape *device.Tape, 
 
 	if err := sess.SetCompression(model.Flags.Has(protocol.FlagRasterPackBits)); err != nil {
 		return fmt.Errorf("set compression: %w", err)
+	}
+
+	if err := sess.SetMargin(protocol.DefaultFeedMargin); err != nil {
+		return fmt.Errorf("set margin: %w", err)
 	}
 
 	if err := sess.SetPrecut(false); err != nil {

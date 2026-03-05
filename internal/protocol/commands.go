@@ -87,6 +87,17 @@ const CompressionNone byte = 0x00
 // CompressionPackBits enables PackBits compression.
 const CompressionPackBits byte = 0x02
 
+// DefaultFeedMargin is the feed margin in dots on each side of the label.
+// The printer feeds this amount of blank tape before and after the content
+// for the cutter. At 180 DPI, 14 dots ≈ 2mm per side ≈ 4mm total.
+const DefaultFeedMargin = 14
+
+// Margin returns the feed margin command (ESC i d).
+// dots is the margin in printer dots on each side of the label.
+func Margin(dots int) []byte {
+	return []byte{esc, 0x69, 0x64, byte(dots & 0xFF), byte((dots >> 8) & 0xFF)}
+}
+
 // Precut returns the precut command.
 func Precut(enable bool) []byte {
 	if enable {

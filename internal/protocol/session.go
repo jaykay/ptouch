@@ -53,6 +53,12 @@ func (s *Session) SetCompression(enable bool) error {
 	return s.send(Compression(mode))
 }
 
+// SetMargin sends the feed margin command.
+// dots is the margin in printer dots on each side of the label.
+func (s *Session) SetMargin(dots int) error {
+	return s.send(Margin(dots))
+}
+
 // SetPrecut sends the precut command. No-op if the printer lacks FlagHasPrecut.
 func (s *Session) SetPrecut(enable bool) error {
 	if !s.flags.Has(FlagHasPrecut) {

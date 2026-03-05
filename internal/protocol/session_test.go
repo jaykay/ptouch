@@ -152,6 +152,19 @@ func TestSessionSetCompressionDisable(t *testing.T) {
 	}
 }
 
+func TestSessionSetMargin(t *testing.T) {
+	rw := newTestRW(nil)
+	s := NewSession(rw, FlagNone)
+
+	if err := s.SetMargin(14); err != nil {
+		t.Fatalf("SetMargin(14) error = %v", err)
+	}
+	want := []byte{0x1B, 0x69, 0x64, 0x0E, 0x00}
+	if !bytes.Equal(rw.written.Bytes(), want) {
+		t.Fatalf("sent %X, want %X", rw.written.Bytes(), want)
+	}
+}
+
 func TestSessionSetPrecutWithFlag(t *testing.T) {
 	rw := newTestRW(nil)
 	s := NewSession(rw, FlagHasPrecut)
