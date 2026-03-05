@@ -31,7 +31,12 @@ func init() {
 }
 
 func main() {
-	if err := rootCmd.Execute(); err != nil {
+	startUpdateCheck()
+	err := rootCmd.Execute()
+	if cmd, _, _ := rootCmd.Find(os.Args[1:]); cmd != updateCmd && cmd != versionCmd {
+		printUpdateNotice()
+	}
+	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}

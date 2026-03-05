@@ -13,6 +13,7 @@ ptouch discover                                          # find printers
 ptouch info --host 192.168.1.50                          # show printer status
 ptouch print --text "Hello World" --host 192.168.1.50    # print a label
 ptouch print --text "Hello" --preview label.png          # preview without printing
+ptouch update                                            # self-update to latest
 ```
 
 ## Features

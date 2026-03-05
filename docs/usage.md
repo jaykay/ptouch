@@ -17,6 +17,51 @@ go install github.com/jaykay/ptouch/cmd/ptouch@latest
 
 ## Commands
 
+### `ptouch version`
+
+Shows the installed version, commit hash, and build date.
+
+```bash
+ptouch version
+```
+
+Output:
+
+```
+ptouch v1.2.1 (commit da992a1, built 2026-03-05T15:17:49Z)
+```
+
+### `ptouch update`
+
+Checks for a newer release on GitHub and updates the binary.
+If Go is installed, it runs `go install ...@latest`. Otherwise it prints
+the download URL for the GitHub release.
+
+```bash
+ptouch update
+```
+
+Output:
+
+```
+Updating v1.2.1 → v1.3.0 ...
+Updated to v1.3.0
+```
+
+### Auto-update check
+
+Every invocation checks for a newer version in the background (at most once
+every 24 hours). If an update is available, a notice is printed to stderr
+after the command finishes:
+
+```
+A new version of ptouch is available: v1.2.1 → v1.3.0
+Run `ptouch update` to upgrade.
+```
+
+The check is non-blocking — it never slows down the command, and dev builds
+are excluded. The cache is stored in `~/.cache/ptouch/`.
+
 ### `ptouch discover`
 
 Scans the local subnet for devices with TCP port 9100 open and queries their HTTP web interface to identify them.
