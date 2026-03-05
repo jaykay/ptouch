@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/jaykay/ptouch/compare/v1.4.0...v1.4.1) (2026-03-05)
+
+
+### Bug Fixes
+
+* **ci:** add workflow_dispatch trigger to Deploy Docs ([c90315c](https://github.com/jaykay/ptouch/commit/c90315c1d9e8bc4a50363f9c8712320528c1410d))
+
 ## [1.4.0](https://github.com/jaykay/ptouch/compare/v1.3.0...v1.4.0) (2026-03-05)
 
 
