@@ -228,6 +228,7 @@ func writeCache(latest string) {
 		return
 	}
 	p := cachePath()
-	os.MkdirAll(filepath.Dir(p), 0o755)
-	os.WriteFile(p, data, 0o644)
+	if err := os.MkdirAll(filepath.Dir(p), 0o755); err == nil {
+		_ = os.WriteFile(p, data, 0o644)
+	}
 }

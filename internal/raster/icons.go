@@ -144,9 +144,10 @@ func fetchIconSVG(prefix, icon string) ([]byte, error) {
 		return nil, fmt.Errorf("read icon %s-%s: %w", prefix, icon, err)
 	}
 
-	// Cache for next time.
-	os.MkdirAll(filepath.Dir(path), 0o755)
-	os.WriteFile(path, data, 0o644)
+	// Cache for next time (best-effort).
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err == nil {
+		_ = os.WriteFile(path, data, 0o644)
+	}
 
 	return data, nil
 }

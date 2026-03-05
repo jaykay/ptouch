@@ -199,9 +199,13 @@ func TestFetchIconSVGCache(t *testing.T) {
 
 	// Pre-populate cache with a test SVG.
 	cacheDir := filepath.Join(tmpDir, "ptouch", "icons", "ti")
-	os.MkdirAll(cacheDir, 0o755)
+	if err := os.MkdirAll(cacheDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
 	testSVG := []byte(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>`)
-	os.WriteFile(filepath.Join(cacheDir, "test-icon.svg"), testSVG, 0o644)
+	if err := os.WriteFile(filepath.Join(cacheDir, "test-icon.svg"), testSVG, 0o644); err != nil {
+		t.Fatal(err)
+	}
 
 	// Should load from cache without network.
 	data, err := fetchIconSVG("ti", "test-icon")

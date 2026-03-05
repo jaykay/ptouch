@@ -33,7 +33,7 @@ func selectPrinter(choices []printerChoice) *printerChoice {
 		// Fallback: non-interactive, pick first.
 		return &choices[0]
 	}
-	defer term.Restore(fd, oldState)
+	defer func() { _ = term.Restore(fd, oldState) }()
 
 	cursor := 0
 	buf := make([]byte, 3)
