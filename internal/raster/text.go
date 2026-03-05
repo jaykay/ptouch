@@ -7,7 +7,7 @@ import (
 	"image/draw"
 	"math"
 
-	"golang.org/x/image/font"
+	xfont "golang.org/x/image/font"
 	"golang.org/x/image/font/gofont/gobold"
 	"golang.org/x/image/font/gofont/goregular"
 	"golang.org/x/image/font/opentype"
@@ -78,25 +78,37 @@ func RenderText(cfg TextConfig, tapePixels, maxPixels int) (*RenderResult, error
 	face, err := opentype.NewFace(fontObj, &opentype.FaceOptions{
 		Size:    fontSize,
 		DPI:     float64(dpi),
-		Hinting: font.HintingFull,
+		Hinting: xfont.HintingFull,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("raster: create font face: %w", err)
 	}
 	defer face.Close()
 
-	// Measure all lines.
+	// Measure all lines (accounting for icons).
 	metrics := face.Metrics()
 	lineHeight := metrics.Ascent + metrics.Descent
 	lineSpacingPx := int(math.Ceil(float64(lineHeight) * 1.2 / 64.0))
 	lineHeightPx := int(math.Ceil(float64(lineHeight) / 64.0))
 	ascentPx := int(math.Ceil(float64(metrics.Ascent) / 64.0))
+	iconSize := lineHeightPx
+
+	useIcons := hasIcons(cfg.Lines)
+	iconCache := make(map[string]*image.RGBA)
 
 	var maxTextWidth int
 	lineWidths := make([]int, len(cfg.Lines))
+	lineSegs := make([][]segment, len(cfg.Lines))
 	for i, line := range cfg.Lines {
-		adv := font.MeasureString(face, line)
-		lineWidths[i] = adv.Ceil()
+		if useIcons {
+			segs := parseLine(line)
+			lineSegs[i] = segs
+			w := measureSegments(face, segs, iconSize, iconCache)
+			lineWidths[i] = w
+		} else {
+			adv := xfont.MeasureString(face, line)
+			lineWidths[i] = adv.Ceil()
+		}
 		if lineWidths[i] > maxTextWidth {
 			maxTextWidth = lineWidths[i]
 		}
@@ -125,7 +137,7 @@ func RenderText(cfg TextConfig, tapePixels, maxPixels int) (*RenderResult, error
 	// Vertical centering: start y so text block is centered on tape.
 	startY := (canvasHeight - textBlockHeight) / 2
 
-	drawer := &font.Drawer{
+	drawer := &xfont.Drawer{
 		Dst:  canvas,
 		Src:  image.NewUniform(color.Black),
 		Face: face,
@@ -143,11 +155,16 @@ func RenderText(cfg TextConfig, tapePixels, maxPixels int) (*RenderResult, error
 		}
 
 		y := startY + i*lineSpacingPx + ascentPx
-		drawer.Dot = fixed.Point26_6{
-			X: fixed.I(xOffset),
-			Y: fixed.I(y),
+
+		if useIcons && lineSegs[i] != nil {
+			drawSegments(canvas, drawer, lineSegs[i], xOffset, y, iconSize, iconCache)
+		} else {
+			drawer.Dot = fixed.Point26_6{
+				X: fixed.I(xOffset),
+				Y: fixed.I(y),
+			}
+			drawer.DrawString(line)
 		}
-		drawer.DrawString(line)
 	}
 
 	// Convert to 1-bit bitmap.
@@ -217,7 +234,7 @@ func measureText(fontObj *opentype.Font, lines []string, sizePt float64, dpi int
 	face, err := opentype.NewFace(fontObj, &opentype.FaceOptions{
 		Size:    sizePt,
 		DPI:     float64(dpi),
-		Hinting: font.HintingFull,
+		Hinting: xfont.HintingFull,
 	})
 	if err != nil {
 		return 9999, 9999
@@ -231,11 +248,60 @@ func measureText(fontObj *opentype.Font, lines []string, sizePt float64, dpi int
 
 	height = lineSpacingPx*(len(lines)-1) + lineHeightPx
 
+	// Dummy cache for measuring — icons resolved here are discarded.
+	measureCache := make(map[string]*image.RGBA)
 	for _, line := range lines {
-		adv := font.MeasureString(face, line)
-		if w := adv.Ceil(); w > width {
+		var w int
+		if hasIcons([]string{line}) {
+			w = measureSegments(face, parseLine(line), lineHeightPx, measureCache)
+		} else {
+			w = xfont.MeasureString(face, line).Ceil()
+		}
+		if w > width {
 			width = w
 		}
 	}
 	return height, width
+}
+
+// measureSegments returns the total width of a parsed line with mixed text/icons.
+// Icon images are resolved and cached in iconCache for reuse during drawing.
+func measureSegments(face xfont.Face, segs []segment, iconSize int, iconCache map[string]*image.RGBA) int {
+	w := 0
+	for _, s := range segs {
+		if s.iconName != "" {
+			img := resolveIcon(s.iconName, iconSize)
+			if img != nil {
+				iconCache[s.iconName] = img
+				w += img.Bounds().Dx()
+			}
+		} else {
+			w += xfont.MeasureString(face, s.text).Ceil()
+		}
+	}
+	return w
+}
+
+// drawSegments renders a parsed line with mixed text and icons onto the canvas.
+func drawSegments(dst *image.RGBA, drawer *xfont.Drawer, segs []segment, x, yBaseline, iconSize int, iconCache map[string]*image.RGBA) {
+	curX := x
+	for _, s := range segs {
+		if s.iconName != "" {
+			img := iconCache[s.iconName]
+			if img == nil {
+				continue
+			}
+			// Vertically center icon on the text baseline.
+			iconY := yBaseline - iconSize + iconSize/6
+			w := renderIconToImage(dst, img, curX, iconY)
+			curX += w
+		} else {
+			drawer.Dot = fixed.Point26_6{
+				X: fixed.I(curX),
+				Y: fixed.I(yBaseline),
+			}
+			drawer.DrawString(s.text)
+			curX = drawer.Dot.X.Ceil()
+		}
+	}
 }

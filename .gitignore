@@ -17,6 +17,9 @@ Thumbs.db
 cover.out
 cover.html
 
+# Temp
+tmp/
+
 # Local config
 .env
 CLAUDE.md

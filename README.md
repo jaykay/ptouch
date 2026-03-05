@@ -18,7 +18,7 @@ ptouch update                                            # self-update to latest
 
 ## Features
 
-- **Text labels** with auto-fit font sizing, multi-line, bold, custom fonts
+- **Text labels** with auto-fit font sizing, multi-line, bold, custom fonts, [inline icons](#inline-icons)
 - **Image labels** from PNG, JPEG, GIF — scaled and converted to monochrome
 - **Fixed-width labels** with alignment (left/center/right) and auto-shrink
 - **Preview mode** — render to PNG without a printer

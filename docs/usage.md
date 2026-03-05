@@ -99,6 +99,24 @@ ptouch print --host 10.0.0.5 ...    # --host overrides the config
 |------|-------------|---------|
 | `--discover-timeout` | Per-host TCP connect timeout | 500ms |
 
+### `ptouch icons`
+
+Shows how to use icons in text labels and links to the icon libraries.
+
+```bash
+ptouch icons
+```
+
+Icons come from two open-source libraries:
+
+| Prefix | Library | License | Browse icons |
+|--------|---------|---------|--------------|
+| `ti-` | [Tabler Icons](https://tabler.io/icons) | MIT | ~5000 outline icons |
+| `bi-` | [Bootstrap Icons](https://icons.getbootstrap.com) | MIT | ~2000 icons (outline + fill) |
+
+Icons are downloaded as SVG on first use and cached in `~/.cache/ptouch/icons/`.
+Browse the websites above to find icon names, then use them with the appropriate prefix.
+
 ### `ptouch info`
 
 Shows printer status, tape info, and model details by querying the printer's HTTP web interface. Displays actionable hints for common issues.
@@ -132,6 +150,22 @@ ptouch print --text "Hello World" --host 192.168.86.130
 ```
 
 Font size is automatically chosen to fill the tape height.
+
+### Inline icons
+
+Use `:prefix-name:` shortcodes to insert icons inline with text. Icons come from
+[Tabler Icons](https://tabler.io/icons) (`ti-`) and [Bootstrap Icons](https://icons.getbootstrap.com) (`bi-`):
+
+```bash
+ptouch print --text "I :ti-heart: labels" --host 192.168.86.130
+ptouch print --text ":ti-star: 5/5 :ti-check:" --host 192.168.86.130
+ptouch print --text ":bi-exclamation-triangle-fill: Danger!" --host 192.168.86.130
+ptouch print --text ":bi-telephone-fill: Call me" --host 192.168.86.130
+```
+
+Icons are vector SVGs — they scale cleanly to any font size. They are downloaded on
+first use and cached in `~/.cache/ptouch/icons/`. Unknown shortcodes are printed as
+literal text. Run `ptouch icons` for details.
 
 ### Multi-line
 
