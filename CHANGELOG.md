@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/jaykay/ptouch/compare/v1.1.0...v1.2.0) (2026-03-05)
+
+
+### Features
+
+* **cli:** add version command with build-time injection ([da992a1](https://github.com/jaykay/ptouch/commit/da992a19403cf0ba629d5e4d5b18316e7b56e89c))
+
 ## [1.1.0](https://github.com/jaykay/ptouch/compare/v1.0.0...v1.1.0) (2026-03-05)
 
 
