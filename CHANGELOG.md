@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.0](https://github.com/jaykay/ptouch/compare/v1.3.0...v1.4.0) (2026-03-05)
+
+
+### Features
+
+* **docs:** add icons reference page with rendered previews ([d94d766](https://github.com/jaykay/ptouch/commit/d94d766d8f428bfa5a467400e951173b9ab9f921))
+
+
+### Bug Fixes
+
+* **lint:** check all error return values flagged by errcheck ([2fecf24](https://github.com/jaykay/ptouch/commit/2fecf24c9bb7caa52ff4b3b74f61fbb8464e44be))
+
 ## [1.3.0](https://github.com/jaykay/ptouch/compare/v1.2.1...v1.3.0) (2026-03-05)
 
 
