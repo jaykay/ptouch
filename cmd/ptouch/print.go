@@ -71,19 +71,20 @@ func runPrint(cmd *cobra.Command, args []string) error {
 	}
 
 	// Connect to printer.
-	if flagHost == "" {
-		return fmt.Errorf("--host is required (or use --preview for offline rendering)")
+	host := resolveHost()
+	if host == "" {
+		return fmt.Errorf("no printer configured — run `ptouch discover` to select one, or pass --host")
 	}
 
 	// Resolve model.
-	model := device.LookupByName(flagModel)
+	model := device.LookupByName(resolveModel())
 	if model == nil {
 		return fmt.Errorf("unknown model %q — use --model with a supported model name", flagModel)
 	}
 	debugf("model: %s (maxPixels=%d, DPI=%d, flags=0x%02X)", model.Name, model.MaxPixels, model.DPI, model.Flags)
 
 	// Check printer status before printing.
-	ws, wsErr := fetchWebStatus(flagHost)
+	ws, wsErr := fetchWebStatus(host)
 	if wsErr == nil {
 		debugf("printer status: %s, media: %s (%s)", ws.DeviceStatus, ws.MediaType, ws.MediaStatus)
 		if hint := statusHint(ws); hint != "" {
@@ -110,13 +111,13 @@ func runPrint(cmd *cobra.Command, args []string) error {
 
 	// Connect without health check — P-Touch printers don't respond
 	// to status requests over TCP.
-	debugf("connecting to %s (timeout %s)", flagHost, flagTimeout)
-	conn, _, err := network.Dial(flagHost,
+	debugf("connecting to %s (timeout %s)", host, flagTimeout)
+	conn, _, err := network.Dial(host,
 		network.WithReadWriteTimeout(flagTimeout),
 		network.WithoutHealthCheck(),
 	)
 	if err != nil {
-		return fmt.Errorf("connect: %w\n\nHint: make sure the printer is turned on and reachable at %s", err, flagHost)
+		return fmt.Errorf("connect: %w\n\nHint: make sure the printer is turned on and reachable at %s.\nIf the printer IP has changed, run `ptouch discover` to update.", err, host)
 	}
 	defer conn.Close()
 
@@ -201,7 +202,7 @@ func defaultTapeForModel(model *device.Model) *device.Tape {
 }
 
 func runPreview(cmd *cobra.Command) error {
-	model := device.LookupByName(flagModel)
+	model := device.LookupByName(resolveModel())
 	if model == nil {
 		model = &device.Model{Name: "preview", MaxPixels: 128, DPI: 180}
 	}
@@ -210,8 +211,9 @@ func runPreview(cmd *cobra.Command) error {
 	if flagTape > 0 {
 		tape = device.LookupTape(flagTape)
 	}
-	if tape == nil && flagHost != "" {
-		if ws, err := fetchWebStatus(flagHost); err == nil && ws.TapeWidthMM > 0 {
+	host := resolveHost()
+	if tape == nil && host != "" {
+		if ws, err := fetchWebStatus(host); err == nil && ws.TapeWidthMM > 0 {
 			tape = device.LookupTape(ws.TapeWidthMM)
 			if tape != nil {
 				debugf("preview: detected %dmm tape from printer", ws.TapeWidthMM)

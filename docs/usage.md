@@ -64,7 +64,7 @@ are excluded. The cache is stored in `~/.cache/ptouch/`.
 
 ### `ptouch discover`
 
-Scans the local subnet for devices with TCP port 9100 open and queries their HTTP web interface to identify them.
+Scans the local subnet for devices with TCP port 9100 open and queries their HTTP web interface to identify them. After scanning, an interactive selector lets you pick a printer with the arrow keys. The selected printer is saved to the config file so you don't need to pass `--host` on every command.
 
 ```bash
 ptouch discover
@@ -79,6 +79,20 @@ Scanning 1 subnet(s) for port 9100...
 Found 2 device(s) with port 9100 open:
   192.168.86.130    Brother PT-P750W — READY
   192.168.86.129    MFC-L3740CDW series — unknown
+
+Select a printer (arrow keys + Enter):
+  > 192.168.86.130  Brother PT-P750W
+    192.168.86.129  MFC-L3740CDW series
+
+Saved 192.168.86.130 as default printer in ~/.config/ptouch/config.yaml
+```
+
+After selecting, you can use any command without `--host`:
+
+```bash
+ptouch print --text "Hello World"    # uses saved printer
+ptouch info                          # uses saved printer
+ptouch print --host 10.0.0.5 ...    # --host overrides the config
 ```
 
 | Flag | Description | Default |
@@ -107,7 +121,7 @@ Tape:       12mm (76 printable pixels, 2.0mm margin)
 
 ### `ptouch print`
 
-Print text or image labels. Requires `--host` for printing, or `--preview` for offline rendering.
+Print text or image labels. Uses the configured printer from `ptouch discover`, or pass `--host` to override. Use `--preview` for offline rendering.
 
 ## Printing Text Labels
 
@@ -258,13 +272,33 @@ Add `-v` for debug output showing model resolution, tape detection, rendering pa
 ptouch print --text "Hello" --host 192.168.86.130 -v
 ```
 
+## Configuration
+
+Running `ptouch discover` saves the selected printer to a YAML config file:
+
+| Platform | Path |
+|----------|------|
+| Linux/macOS | `~/.config/ptouch/config.yaml` |
+| `$XDG_CONFIG_HOME` set | `$XDG_CONFIG_HOME/ptouch/config.yaml` |
+
+Example config:
+
+```yaml
+host: 192.168.86.130
+model: Brother PT-P750W
+```
+
+The `--host` flag always takes precedence over the config file. Settings can also be overridden via environment variables with the `PTOUCH_` prefix (e.g. `PTOUCH_HOST=10.0.0.5`).
+
+If the printer becomes unreachable (e.g. IP changed), the error message will prompt you to rerun `ptouch discover`.
+
 ## Global Flags
 
 These apply to all commands:
 
 | Flag | Description | Default |
 |------|-------------|---------|
-| `--host` | Printer IP address or hostname | — |
+| `--host` | Printer IP address or hostname (overrides config) | from config |
 | `--model` | Printer model name | PT-P750W |
 | `--tape` | Tape width in mm (0 = auto-detect) | 0 |
 | `--timeout` | TCP read/write timeout | 10s |

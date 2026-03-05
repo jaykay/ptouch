@@ -9,9 +9,9 @@ Reimplements the Brother ESC/P raster protocol in Go — no USB required, no dri
 ```bash
 go install github.com/jaykay/ptouch/cmd/ptouch@latest
 
-ptouch discover                                          # find printers
-ptouch info --host 192.168.1.50                          # show printer status
-ptouch print --text "Hello World" --host 192.168.1.50    # print a label
+ptouch discover                                          # find & select printer (saved to config)
+ptouch info                                              # show printer status
+ptouch print --text "Hello World"                        # print a label
 ptouch print --text "Hello" --preview label.png          # preview without printing
 ptouch update                                            # self-update to latest
 ```
@@ -22,7 +22,7 @@ ptouch update                                            # self-update to latest
 - **Image labels** from PNG, JPEG, GIF — scaled and converted to monochrome
 - **Fixed-width labels** with alignment (left/center/right) and auto-shrink
 - **Preview mode** — render to PNG without a printer
-- **Printer discovery** — scan local network for port 9100 devices
+- **Printer discovery** — scan local network, select interactively, saved to config
 - **Tape auto-detection** from the printer's web interface
 - **Multiple copies**, chain printing, cut control
 

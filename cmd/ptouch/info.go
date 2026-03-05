@@ -20,15 +20,16 @@ var infoCmd = &cobra.Command{
 Note: P-Touch printers on the network do not support bidirectional
 communication over port 9100. Status is read from the HTTP interface.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if flagHost == "" {
-			return fmt.Errorf("--host is required")
+		host := resolveHost()
+		if host == "" {
+			return fmt.Errorf("no printer configured — run `ptouch discover` to select one, or pass --host")
 		}
 
 		out := cmd.OutOrStdout()
 
-		status, err := fetchWebStatus(flagHost)
+		status, err := fetchWebStatus(host)
 		if err != nil {
-			return fmt.Errorf("query printer: %w\n\nHint: make sure the printer is turned on and reachable at %s", err, flagHost)
+			return fmt.Errorf("query printer: %w\n\nHint: make sure the printer is turned on and reachable at %s.\nIf the printer IP has changed, run `ptouch discover` to update.", err, host)
 		}
 
 		fmt.Fprintf(out, "Printer:    %s\n", status.ModelName)

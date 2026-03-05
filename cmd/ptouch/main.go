@@ -31,6 +31,7 @@ func init() {
 }
 
 func main() {
+	initConfig()
 	startUpdateCheck()
 	err := rootCmd.Execute()
 	if cmd, _, _ := rootCmd.Find(os.Args[1:]); cmd != updateCmd && cmd != versionCmd {
