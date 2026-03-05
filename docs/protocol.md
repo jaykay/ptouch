@@ -1,3 +1,8 @@
+---
+title: Protocol
+nav_order: 4
+---
+
 # Brother ESC/P Raster Protocol
 
 This document describes the binary protocol used by Brother P-Touch printers over TCP port 9100 (and USB). Based on the [C reference implementation](https://git.familie-radermacher.ch/linux/ptouch-print.git).

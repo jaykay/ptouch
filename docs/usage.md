@@ -1,3 +1,8 @@
+---
+title: Usage Guide
+nav_order: 2
+---
+
 # Usage Guide
 
 ## Installation
