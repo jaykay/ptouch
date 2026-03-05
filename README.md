@@ -36,6 +36,7 @@ Supports tape widths: 3.5mm, 6mm, 9mm, 12mm, 18mm, 24mm, 36mm.
 See [`docs/`](docs/) for the full documentation:
 
 - [Usage Guide](docs/usage.md) — commands, flags, and examples
+- [Icons](docs/icons.md) — inline icon reference with previews
 - [Architecture](docs/architecture.md) — how the code is structured
 - [Protocol](docs/protocol.md) — Brother ESC/P raster protocol details
 - [Troubleshooting](docs/troubleshooting.md) — common issues and fixes

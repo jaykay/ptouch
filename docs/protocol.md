@@ -1,6 +1,6 @@
 ---
 title: Protocol
-nav_order: 4
+nav_order: 5
 ---
 
 # Brother ESC/P Raster Protocol
