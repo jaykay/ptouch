@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.0](https://github.com/jaykay/ptouch/compare/v1.2.1...v1.3.0) (2026-03-05)
+
+
+### Features
+
+* **cli:** add auto-update check and `ptouch update` command ([ba14ff2](https://github.com/jaykay/ptouch/commit/ba14ff280dced335581465d39194059de0922b88))
+* **cli:** add printer config via interactive discover selector ([1bbfa5c](https://github.com/jaykay/ptouch/commit/1bbfa5c27c70ce47834477c869550604f13de442))
+
+
+### Bug Fixes
+
+* **cli:** hide unknown commit/date in version output ([4bf7b04](https://github.com/jaykay/ptouch/commit/4bf7b040860de6fe3c9841f5561f10a5c8e59dae))
+
 ## [1.2.1](https://github.com/jaykay/ptouch/compare/v1.2.0...v1.2.1) (2026-03-05)
 
 
