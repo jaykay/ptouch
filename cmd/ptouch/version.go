@@ -37,6 +37,10 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version of ptouch",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("ptouch %s (commit %s, built %s)\n", version, commit, date)
+		if commit == "unknown" && date == "unknown" {
+			fmt.Printf("ptouch %s\n", version)
+		} else {
+			fmt.Printf("ptouch %s (commit %s, built %s)\n", version, commit, date)
+		}
 	},
 }
